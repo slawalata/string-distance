@@ -1,15 +1,15 @@
 package com.example.web;
 
-public class Request {
+public class Params {
 
     private String notebookEntry;
 
     private String keyword;
 
-    public Request() {
+    public Params() {
     }
 
-    public Request(String notebookEntry, String keyword) {
+    public Params(String notebookEntry, String keyword) {
         this.notebookEntry = notebookEntry;
         this.keyword = keyword;
     }

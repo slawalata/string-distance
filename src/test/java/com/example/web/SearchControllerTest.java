@@ -1,6 +1,5 @@
 package com.example.web;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasSize;
@@ -56,9 +54,9 @@ public class SearchControllerTest {
     @Test
     public void testSearchWithRequestParameters() throws Exception {
         this.mockMvc
-                .perform(get("/search")
+                .perform(get("/similars")
                         .contentType(contentType)
-                        .content(this.json(new Request("One Two", "world"))))
+                        .content(this.json(new Params("One Two", "world"))))
 
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.keyword", is("world")))
