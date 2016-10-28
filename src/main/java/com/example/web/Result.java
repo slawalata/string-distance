@@ -16,6 +16,9 @@ public class Result {
         this.similarWords = similarWords;
     }
 
+    public Result() {
+    }
+
     public String getKeyword() {
         return keyword;
     }
