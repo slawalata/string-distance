@@ -20,8 +20,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(SearchController.class)
 public class SearchControllerTest {
 
-    private MediaType contentType =
+    private MediaType jsonContentType =
             new MediaType(APPLICATION_JSON.getType(),APPLICATION_JSON.getSubtype(),Charset.forName("utf8"));
 
     private HttpMessageConverter mappingJackson2HttpMessageConverter;
@@ -55,7 +53,7 @@ public class SearchControllerTest {
     public void testSearchWithRequestParameters() throws Exception {
         this.mockMvc
                 .perform(get("/similars")
-                        .contentType(contentType)
+                        .contentType(jsonContentType)
                         .content(this.json(new Params("One Two", "world"))))
 
                 .andExpect(status().isOk())
@@ -64,6 +62,14 @@ public class SearchControllerTest {
                 .andExpect(jsonPath("$.similar_words", hasSize(2)))
                 .andExpect(jsonPath("$.similar_words.[0]", is("One")))
                 .andExpect(jsonPath("$.similar_words.[1]", is("Two")));
+    }
+
+    @Test
+    public void testSearchWithMissingMandatoryParameters() throws Exception {
+        this.mockMvc
+                .perform(get("/similars").contentType(jsonContentType))
+                .andExpect(status().isUnprocessableEntity());
+
     }
 
     protected String json(Object o) throws IOException {
