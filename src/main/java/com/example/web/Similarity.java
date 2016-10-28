@@ -2,7 +2,7 @@ package com.example.web;
 
 import java.util.List;
 
-public class Result {
+public class Similarity {
 
     private String keyword;
 
@@ -10,13 +10,13 @@ public class Result {
 
     private List<String> similarWords;
 
-    public Result(String keyword, int frequency, List<String> similarWords) {
+    public Similarity(String keyword, int frequency, List<String> similarWords) {
         this.keyword = keyword;
         this.frequency = frequency;
         this.similarWords = similarWords;
     }
 
-    public Result() {
+    public Similarity() {
     }
 
     public String getKeyword() {
