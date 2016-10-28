@@ -11,7 +11,7 @@ import static org.apache.commons.lang3.StringUtils.getLevenshteinDistance;
 public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args).close();
+        SpringApplication.run(Application.class, args);
     }
 
 
@@ -28,6 +28,7 @@ public class Application {
             System.out.println("distance : "+getLevenshteinDistance("Word","Words"));
             System.out.println("distance : "+getLevenshteinDistance("Word","Wor"));
             System.out.println("distance : "+getLevenshteinDistance("Word","word"));
+            System.out.println("distance : "+getLevenshteinDistance("Word","wor"));
 
         };
     }
