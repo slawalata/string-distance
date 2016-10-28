@@ -35,8 +35,8 @@ public class SearchControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.keyword", is("hello")))
                 .andExpect(jsonPath("$.frequency", is(1)))
-                .andExpect(jsonPath("$.similarWords", hasSize(1)))
-                .andExpect(jsonPath("$.similarWords.[0]", is("world")));
+                .andExpect(jsonPath("$.similar_words", hasSize(1)))
+                .andExpect(jsonPath("$.similar_words.[0]", is("world")));
     }
 
 
