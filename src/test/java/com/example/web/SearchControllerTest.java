@@ -1,81 +1,73 @@
 package com.example.web;
 
+import com.example.service.WordDistanceService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mock.http.MockHttpOutputMessage;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.runners.JUnit4;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
+import java.util.Collections;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
-
-@RunWith(SpringRunner.class)
-@WebMvcTest(SearchController.class)
+@RunWith(JUnit4.class)
 public class SearchControllerTest {
 
-    private MediaType jsonContentType =
-            new MediaType(APPLICATION_JSON.getType(),APPLICATION_JSON.getSubtype(),Charset.forName("utf8"));
+    SearchController controller;
 
-    private HttpMessageConverter mappingJackson2HttpMessageConverter;
-
-    @Autowired
-    MockMvc mockMvc;
-
-    @Autowired
-    void setConverters(HttpMessageConverter<?>[] converters) {
-
-        this.mappingJackson2HttpMessageConverter =
-                asList(converters)
-                        .stream()
-                        .filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter)
-                        .findAny()
-                        .get();
-
-        assertNotNull("the JSON message converter must not be null",this.mappingJackson2HttpMessageConverter);
+    @Before
+    public void setUp(){
+        controller = new SearchController(new WordDistanceService());
     }
 
     @Test
-    public void testSearchWithRequestParameters() throws Exception {
-        this.mockMvc
-                .perform(get("/similars")
-                        .contentType(jsonContentType)
-                        .content(this.json(new Params("One Two", "world"))))
+    public void testWordWithNoSimilarities() throws Exception {
+        // given
+        Params params = new Params("test nothing similiart","word");
+        Similarity expected = new Similarity("word", 0, Collections.emptyList());
 
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.keyword", is("world")))
-                .andExpect(jsonPath("$.frequency", is(1)))
-                .andExpect(jsonPath("$.similar_words", hasSize(2)))
-                .andExpect(jsonPath("$.similar_words.[0]", is("One")))
-                .andExpect(jsonPath("$.similar_words.[1]", is("Two")));
+        // when
+        Similarity current = controller.searchSimiliars(params);
+
+        // then
+        assertThat(current,is(expected));
     }
 
     @Test
-    public void testSearchWithMissingMandatoryParameters() throws Exception {
-        this.mockMvc
-                .perform(get("/similars").contentType(jsonContentType))
-                .andExpect(status().isUnprocessableEntity());
+    public void test1WordWithSimilarities() throws Exception {
+        // given
+        Params params = new Params("Word Words Wor word","Word");
+        Similarity expected = new Similarity("Word", 1, asList("Words", "Wor", "word"));
 
+        // when
+        Similarity current = controller.searchSimiliars(params);
+
+        // then
+        assertThat(current,is(expected));
     }
 
-    protected String json(Object o) throws IOException {
-        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
-        this.mappingJackson2HttpMessageConverter.write(o, APPLICATION_JSON, mockHttpOutputMessage);
-        return mockHttpOutputMessage.getBodyAsString();
+    @Test
+    public void test1WordWith3Similarities() throws Exception {
+        // given
+        Params params = new Params("Word Word Word word","Word");
+        Similarity expected = new Similarity("Word", 3, asList("word"));
+
+        // when
+        Similarity current = controller.searchSimiliars(params);
+
+        // then
+        assertThat(current,is(expected));
     }
 
+    @Test (expected = IllegalArgumentException.class)
+    public void testMissingMandatoryParameters() throws Exception {
+        // given
+        Params params = new Params("","");
+
+        // when
+        controller.searchSimiliars(params);
+
+    }
 }
