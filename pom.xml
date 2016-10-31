@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>slawalata-lab-folder</artifactId>
+    <artifactId>string-distance</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>slawalata-lab-folder</name>
-    <description>Demo project for Spring Boot</description>
+    <name>String distance</name>
+    <description>lab-folder code assessment</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
