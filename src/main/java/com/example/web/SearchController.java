@@ -19,6 +19,8 @@ public class SearchController {
 
     private StringDistance stringDistance;
 
+    private int distance = 1;
+
     @Autowired
     public SearchController(StringDistance  stringDistance) {
         this.stringDistance = stringDistance;
@@ -44,7 +46,10 @@ public class SearchController {
                         .entrySet()
                         .stream()
                         .parallel()
-                        .filter(e -> e.getKey() == 1)
+                        .filter(e -> {
+
+                            return e.getKey() == distance;
+                        })
                         .flatMap(e -> e.getValue().stream())
                         .collect(toList());
 

@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SearchControllerIT {
 
     private MediaType jsonContentType =
-            new MediaType(APPLICATION_JSON.getType(),APPLICATION_JSON.getSubtype(),Charset.forName("utf8"));
+            new MediaType(APPLICATION_JSON.getType(), APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 
     private HttpMessageConverter mappingJackson2HttpMessageConverter;
 
@@ -46,11 +46,11 @@ public class SearchControllerIT {
                         .findAny()
                         .get();
 
-        assertNotNull("the JSON message converter must not be null",this.mappingJackson2HttpMessageConverter);
+        assertNotNull("the JSON message converter must not be null", this.mappingJackson2HttpMessageConverter);
     }
 
     @Test
-    public void testSearchWithRequestParameters() throws Exception {
+    public void testSearchSimilarsWithValidRequestParameters() throws Exception {
         this.mockMvc
                 .perform(get("/similars")
                         .contentType(jsonContentType)
@@ -63,7 +63,7 @@ public class SearchControllerIT {
     }
 
     @Test
-    public void testSearchWithMissingMandatoryParameters() throws Exception {
+    public void testSearchSimilarsWithMissingMandatoryParameters() throws Exception {
         this.mockMvc
                 .perform(get("/similars").contentType(jsonContentType)
                         .content(this.json(new Params(null, null))))
@@ -71,19 +71,19 @@ public class SearchControllerIT {
     }
 
     @Test
-    public void testSearchWithMissingRequestBody() throws Exception {
+    public void testSearchSimilarsWithoutRequestBody() throws Exception {
         this.mockMvc
                 .perform(get("/similars").contentType(jsonContentType))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void testWordWith1Similarities() throws Exception {
+    public void testSearchSimilarsWith1ExactAnd3Similarities() throws Exception {
         this.mockMvc
                 .perform(
                         get("/similars")
-                        .content(this.json(new Params("Word Words Wor word","Word")))
-                        .contentType(jsonContentType))
+                                .content(this.json(new Params("Word Words Wor word", "Word")))
+                                .contentType(jsonContentType))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.keyword", is("Word")))
                 .andExpect(jsonPath("$.frequency", is(1)))
