@@ -62,7 +62,7 @@ Similarity
 |false|true| true|testSearchSimilarsWordWith1SimilaritiesAnd1NotSimiliar|
 |true|true| true|testSearchSimilarsWordWith1ExactAnd3Similarities|
 
-## Future Discussion
+## Future Discussion / Refactoring
 * Common best practice is to use `paramRequest` instead of `body request` while search/find using HTTP get. 
 But String length (notebook_entry) of `paramRequest` would be limited in case searching in a very long string. 
 `paramRequest` enables users to call directly service endpoint in a web browser.
@@ -74,3 +74,4 @@ Currently it is hard coded. It can be move to configuration (file or bean) so it
 It loads SpringContainers to test Rest Serialization/Deserialization based on given inputs which can takes time when test cases grow. 
 For Rest JSON Serialization/Deserialization test, we can use `@JSONTest`. 
 For `SearchController` test, we can use basic unit test.
+* Encapsulate Internal Java Exception into a plain error message.
