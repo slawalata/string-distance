@@ -19,7 +19,7 @@ find word similiarities in a long string based on keyword
 |BodyParameter| keyword      |   requestParam |true|
 
 #### Responses
-| HTTP Code        | Description | Schema  
+| HTTP Code        | Description | Schema |  
 | ------------- |:-------------:| :-----:|
 |200 | OK | Similarity |
 |400 | Missing Request Body | No Content|
@@ -32,7 +32,9 @@ application/json
 application/json
 
 ##### Schema 
+
 Similarity
+
 | Name        | Description   | Schema  |
 | ------------|:-------------:| :------:|
 |keyword| search keyword | string |
