@@ -1,6 +1,6 @@
 package com.example.web;
 
-import com.example.service.WordDistanceService;
+import com.example.utils.StringDistance;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ public class SearchControllerTest {
 
     @Before
     public void setUp(){
-        controller = new SearchController(new WordDistanceService());
+        controller = new SearchController(new StringDistance());
     }
 
     @Test

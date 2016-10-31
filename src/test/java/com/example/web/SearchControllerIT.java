@@ -1,12 +1,9 @@
 package com.example.web;
 
-import com.example.service.WordDistanceService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -36,14 +33,6 @@ public class SearchControllerIT {
 
     private HttpMessageConverter mappingJackson2HttpMessageConverter;
 
-    @TestConfiguration
-    static class Conf {
-        @Bean
-        WordDistanceService wordDistanceService() {
-            return new WordDistanceService();
-        }
-    }
-
     @Autowired
     MockMvc mockMvc;
 
@@ -64,9 +53,9 @@ public class SearchControllerIT {
     public void testSearchWithRequestParameters() throws Exception {
         this.mockMvc
                 .perform(get("/similars")
+                        .contentType(jsonContentType)
                         .content(this.json(new Params("One Two", "world")))
-                        .contentType(jsonContentType))
-
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.keyword", is("world")))
                 .andExpect(jsonPath("$.frequency", is(0)))
@@ -76,9 +65,16 @@ public class SearchControllerIT {
     @Test
     public void testSearchWithMissingMandatoryParameters() throws Exception {
         this.mockMvc
-                .perform(get("/similars").contentType(jsonContentType))
+                .perform(get("/similars").contentType(jsonContentType)
+                        .content(this.json(new Params(null, null))))
                 .andExpect(status().isUnprocessableEntity());
+    }
 
+    @Test
+    public void testSearchWithMissingRequestBody() throws Exception {
+        this.mockMvc
+                .perform(get("/similars").contentType(jsonContentType))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.utils.StringDistance;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,6 +15,10 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
+    @Bean
+    StringDistance stringDistance(){
+        return new StringDistance() ;
+    }
 
     @Bean
     CommandLineRunner cmd() {
@@ -32,4 +37,5 @@ public class Application {
 
         };
     }
+
 }
